@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO & Meta Tags -->
+    <title>Abirapk - Best Premium App Store</title>
+    <meta name="description" content="Download the best APKs from Abirapk store for free.">
+    <meta name="keywords" content="Abirapk, APK, Download, Premium App Store">
+    
+    <!-- PWA Setup -->
+    <meta content="Abir Apk" name="application-name"/>
+    <meta content="Abir Apk" name="apple-mobile-web-app-title"/>
+    <meta content="yes" name="mobile-web-app-capable"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="#ffffff" name="theme-color"/>
+    
+    <!-- App Icons -->
+    <link href="https://i.ibb.co/tPFKtb9p/Untitled-design-2.png" rel="apple-touch-icon"/>
+    <link href="https://i.ibb.co/tPFKtb9p/Untitled-design-2.png" rel="icon" type="image/png"/>
+
+    <!-- Tailwind CSS & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+    <!-- AD SCRIPT 1 (Header/Popunder) -->
+    <script src="https://pl28701854.effectivegatecpm.com/a8/bd/07/a8bd079271238f501b59fa6945eb49a5.js"></script>
+
+    <script>
+        tailwind.config = {
+           darkMode: 'class',
+            theme: {
+                fontFamily: { sans: ['SF Pro Display', 'Inter', 'sans-serif'] },
+                extend: { 
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'blob': 'blob 7s infinite',
+                        'zoom-in': 'zoomIn 0.3s ease-out forwards'
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+                        slideUp: { '0%': { transform: 'translateY(100%)' }, '100%': { transform: 'translateY(0)' } },
+                        zoomIn: { '0%': { transform: 'scale(0.9)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background: #f0f2f5; 
+            -webkit-tap-highlight-color: transparent; 
+            overscroll-behavior-y: none;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        /* Water/Fluid Background Animation */
+        .water-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: linear-gradient(180deg, #e0e7ff 0%, #f3f4f6 100%);
+            overflow: hidden;
+        }
+        .dark .water-bg {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        }
+        .shape {
+            position: absolute;
+            filter: blur(50px);
+            opacity: 0.6;
+            animation: blob 10s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        .shape-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #bfdbfe; border-radius: 50%; mix-blend-mode: multiply; }
+        .shape-2 { top: -10%; right: -10%; width: 400px; height: 400px; background: #e9d5ff; border-radius: 50%; mix-blend-mode: multiply; animation-delay: 2s; }
+        .shape-3 { bottom: -20%; left: 20%; width: 600px; height: 600px; background: #ddd6fe; border-radius: 50%; mix-blend-mode: multiply; animation-delay: 4s; }
+        
+        .dark .shape-1 { background: #1e3a8a; mix-blend-mode: screen; opacity: 0.3; }
+        .dark .shape-2 { background: #581c87; mix-blend-mode: screen; opacity: 0.3; }
+        .dark .shape-3 { background: #172554; mix-blend-mode: screen; opacity: 0.3; }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .h-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+        .h-scroll::-webkit-scrollbar { display: none; }
+        .snap-start { scroll-snap-align: start; }
+        
+        .nav-active { color: #007AFF !important; }
+        .dark .nav-active { color: #3b82f6 !important; }
+        
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        
+        .star-rating i { cursor: pointer; transition: color 0.2s; }
+        .star-rating i.active { color: #FFB800; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+  
+<body class="text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-28 relative">
+    
+    <!-- Water Animation Background -->
+    <div class="water-bg">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Navbar (Glass) -->
+    <nav class="sticky top-0 z-40 glass-nav px-5 py-3 flex justify-between items-center shadow-sm">
+        <!-- Logo -->
+        <div class="flex items-center">
+            <img alt="Abir Apk" class="h-12 w-auto object-contain" src="https://i.ibb.co/23vSKQ9y/Picsart-26-02-16-23-40-54-853.png"/>
+        </div>
+        
+        <div class="flex gap-3 items-center">
+            <!-- PWA Install Button -->
+            <button class="hidden px-3 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 active:scale-95 transition-transform animate-pulse" id="pwaInstallBtn" onclick="window.installPWA()">
+                <i class="fas fa-download text-xs"></i>
+                <span class="text-xs font-bold">Install</span>
+            </button>
+
+            <!-- Theme Toggle -->
+            <button class="w-9 h-9 rounded-full bg-white/50 dark:bg-slate-800/50 flex items-center justify-center backdrop-blur-sm shadow-sm border border-white/20" onclick="window.toggleTheme()">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Search -->
+    <div class="px-5 py-2 sticky top-[68px] z-30">
+        <div class="glass-panel rounded-2xl px-4 py-3 flex items-center gap-3">
+            <i class="fas fa-search text-gray-400"></i>
+            <input class="bg-transparent border-none outline-none w-full text-sm font-medium dark:text-white placeholder-gray-500" id="searchInput" placeholder="Search Games & Apps..." type="text"/>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-lg mx-auto min-h-screen" id="mainContainer">
+        
+        <!-- HOME TAB -->
+        <div class="tab-content active" id="tab-home">
+            
+            <!-- Banners -->
+            <div class="mt-4 px-5">
+                 <div class="flex h-scroll gap-4" id="bannerContainer">
+                    <div class="min-w-[90%] h-48 rounded-3xl bg-white/40 animate-pulse"></div>
+                 </div>
+            </div>
+
+            <!-- AD SPACE 2 (Middle - Script Ad) -->
+            <div class="px-5 py-4">
+               <script src="https://pl28701862.effectivegatecpm.com/e0/7f/27/e07f270a8c3e2196431f15f4ae43efb7.js"></script>
+            </div>
+
+            <!-- Trending -->
+            <div id="trendingSection">
+                <div class="flex justify-between items-end px-5 mb-3">
+                    <h2 class="font-bold text-xl">Trending Now</h2>
+                    <span class="text-blue-600 text-xs font-semibold">See All</span>
+                </div>
+                <div class="flex h-scroll gap-5 px-5 pb-4" id="trendingContainer"></div>
+            </div>
+
+            <!-- List -->
+            <h2 class="font-bold text-xl px-5 mt-2 mb-3" id="mainListTitle">For You</h2>
+            <div class="grid grid-cols-1 gap-4 px-5 pb-4" id="appGrid">
+                <div class="text-center py-10 text-gray-400">Loading awesome apps...</div>
+            </div>
+
+            <!-- AD SPACE 3 (Bottom - Banner 728x90) -->
+            <div class="flex justify-center my-6 overflow-hidden rounded-xl mx-4">
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : 'f3aeceeca8b8c50241a25460e3c1fb7e',
+                        'format' : 'iframe',
+                        'height' : 90,
+                        'width' : 728,
+                        'params' : {}
+                    };
+                </script>
+                <script src="https://www.highperformanceformat.com/f3aeceeca8b8c50241a25460e3c1fb7e/invoke.js" type="text/javascript"></script>
+            </div>
+        </div>
+
+        <!-- UPLOAD TAB (Admin/Dev Zone) -->
+        <div class="tab-content p-5" id="tab-upload">
+            <h1 class="text-3xl font-bold mb-6">Developer Zone</h1>
+            
+            <!-- Auth Gate -->
+            <div class="flex flex-col items-center py-10 text-center glass-panel rounded-3xl p-6" id="authGate">
+                <div class="w-20 h-20 bg-blue-100/50 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-lock text-3xl text-blue-600"></i>
+                </div>
+                
+                <h3 class="font-bold text-xl mb-2" id="authTitle">Admin Access</h3>
+                <p class="text-sm text-gray-500 mb-6">Sign in to manage and upload apps.</p>
+                
+                <button class="w-full bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-3 mb-4 shadow-sm" onclick="window.googleLogin()">
+                    <i class="fab fa-google text-red-500"></i> Continue with Google
+                </button>
+                
+                <div class="w-full border-t border-gray-300/50 my-4 relative"><span class="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-xs text-gray-500 rounded-full">OR</span></div>
+
+                <!-- Login Form -->
+                <form class="w-full space-y-3" id="formLogin" onsubmit="window.emailLogin(event)">
+                    <input class="w-full p-3.5 rounded-2xl border-0 bg-gray-100/50 dark:bg-slate-800/50 outline-none focus:ring-2 focus:ring-blue-500" id="loginEmail" placeholder="Email Address" required="required" type="email"/>
+                    <input class="w-full p-3.5 rounded-2xl border-0 bg-gray-100/50 dark:bg-slate-800/50 outline-none focus:ring-2 focus:ring-blue-500" id="loginPass" placeholder="Password" required="required" type="password"/>
+                    <button class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-blue-600/30" type="submit">Login</button>
+                    
+                    <p class="text-xs mt-3 text-gray-500">Don't have an account? <span class="text-blue-600 font-bold cursor-pointer" onclick="window.toggleAuthMode('register')">Register</span></p>
+                </form>
+
+                <!-- Register Form (Direct Registration - No OTP) -->
+                <form class="w-full space-y-3 hidden" id="formRegister" onsubmit="window.registerUser(event)">
+                    <input class="w-full p-3.5 rounded-2xl border-0 bg-gray-100/50 dark:bg-slate-800/50 outline-none focus:ring-2 focus:ring-blue-500" id="regEmail" placeholder="Enter Email" required="required" type="email"/>
+                    <input class="w-full p-3.5 rounded-2xl border-0 bg-gray-100/50 dark:bg-slate-800/50 outline-none focus:ring-2 focus:ring-blue-500" id="regPass" placeholder="Create Password (min 6 chars)" required="required" type="password"/>
+                    <button class="w-full bg-green-600 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-green-600/30" type="submit">Create Account</button>
+                    
+                    <p class="text-xs mt-3 text-gray-500">Already have an account? <span class="text-blue-600 font-bold cursor-pointer" onclick="window.toggleAuthMode('login')">Login</span></p>
+                </form>
+
+                <p class="text-xs text-red-500 mt-2 hidden" id="loginError"></p>
+            </div>
+
+            <!-- Upload Form -->
+            <div class="hidden" id="uploadFormSection">
+                <div class="flex items-center gap-3 mb-6 p-4 glass-panel rounded-2xl">
+                    <img class="w-12 h-12 rounded-full ring-2 ring-white" id="userAvatar" src=""/>
+                    <div>
+                        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Logged in as</p>
+                        <p class="text-base font-bold" id="userName">User</p>
+                    </div>
+                    <button class="ml-auto bg-red-50 text-red-500 px-3 py-1.5 rounded-lg text-xs font-bold" onclick="window.logout()">LOGOUT</button>
+                </div>
+
+                <form class="space-y-4 pb-20" onsubmit="window.submitApp(event)">
+                    <div class="glass-panel p-5 rounded-3xl space-y-4">
+                        <h3 class="font-bold text-gray-400 text-sm uppercase">App Details</h3>
+                        <input class="w-full p-3.5 rounded-xl bg-gray-50/50 dark:bg-slate-800/50 border-0 outline-none" id="upName" placeholder="App Name" required="required"/>
+                        <div class="flex gap-3">
+                            <input class="w-full p-3.5 rounded-xl bg-gray-50/50 dark:bg-slate-800/50 border-0 outline-none" id="upDev" placeholder="Developer Name" required="required"/>
+                            <select class="w-full p-3.5 rounded-xl bg-gray-50/50 dark:bg-slate-800/50 border-0 outline-none" id="upCat"><option>Game</option><option>App</option></select>
+                        </div>
+                        <input class="w-full p-3.5 rounded-xl bg-gray-50/50 dark:bg-slate-800/50 border-0 outline-none" id="upIcon" placeholder="Icon URL (Direct Link)" required="required" type="url"/>
+                        <input class="w-full p-3.5 rounded-xl bg-gray-50/50 dark:bg-slate-800/50 border-0 outline-none" id="upLink" placeholder="Download Link" required="required" type="url"/>
+                        <input class="w-full p-3.5 rounded-xl bg-gray-50/50 dark:bg-slate-800/50 border-0 outline-none" id="upScreens" placeholder="Screenshots (url1,url2,url3)"/>
+                        <textarea class="w-full p-3.5 rounded-xl bg-gray-50/50 dark:bg-slate-800/50 border-0 outline-none" id="upDesc" placeholder="Description" required="required" rows="4"></textarea>
+                        <button class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-blue-600/30 active:scale-95 transition-transform" id="submitBtn" type="submit">Publish App</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- DOWNLOADS TAB -->
+        <div class="tab-content p-5" id="tab-downloads">
+            <h1 class="text-3xl font-bold mb-6">My Apps</h1>
+            <div class="space-y-3" id="downloadsList"></div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Nav (iPhone Style) -->
+    <div class="fixed bottom-0 w-full glass-nav flex justify-around items-end py-2 pb-8 z-50 border-t-0">
+        <button class="flex flex-col items-center w-16 text-gray-400 nav-active transition-all duration-300" id="btn-home" onclick="window.switchTab('home')">
+            <i class="fas fa-compass text-2xl mb-1"></i>
+            <span class="text-[10px] font-semibold">Discover</span>
+        </button>
+        
+        <button class="-mt-10 group" onclick="window.switchTab('upload')">
+            <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center shadow-2xl shadow-blue-600/40 text-white border-[6px] border-[#f3f4f6] dark:border-[#0f172a] group-active:scale-90 transition-transform">
+                <i class="fas fa-cloud-upload-alt text-xl"></i>
+            </div>
+        </button>
+
+        <button class="flex flex-col items-center w-16 text-gray-400 transition-all duration-300" id="btn-downloads" onclick="window.switchTab('downloads')">
+            <i class="fas fa-folder-open text-2xl mb-1"></i>
+            <span class="text-[10px] font-semibold">Library</span>
+        </button>
+    </div>
+
+    <!-- App Details Overlay -->
+    <div class="hidden fixed inset-0 z-[60] flex items-end justify-center" id="appView">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onclick="window.goHome()"></div>
+        <div class="relative w-full max-w-lg bg-white/90 dark:bg-[#1a1a1a]/95 backdrop-blur-2xl rounded-t-[40px] h-[92vh] overflow-y-auto animate-slide-up p-0 shadow-2xl">
+            
+            <div class="sticky top-0 z-10 flex justify-end p-4 bg-gradient-to-b from-white/90 to-transparent dark:from-[#1a1a1a]/90">
+                 <button class="w-9 h-9 bg-gray-200/50 dark:bg-gray-700/50 rounded-full flex items-center justify-center backdrop-blur-md" onclick="window.goHome()"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="px-6 pb-24">
+                <!-- Header Info -->
+                <div class="flex gap-5 mb-8">
+                    <img class="w-28 h-28 rounded-[22px] shadow-xl shadow-blue-500/10 bg-gray-100 object-cover" id="detailIcon" src=""/>
+                    <div class="pt-1 flex-1">
+                        <h1 class="text-2xl font-bold leading-tight mb-1" id="detailName">...</h1>
+                        <p class="text-gray-500 text-sm font-medium mb-3" id="detailDev">...</p>
+                        
+                        <div class="flex gap-2">
+                             <button class="flex-1 bg-blue-600 text-white py-2 rounded-full font-bold text-sm shadow-lg shadow-blue-600/30 active:scale-95 transition-transform" id="installBtn" onclick="window.startDownload()">GET</button>
+                             <button class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center"><i class="fas fa-share"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center py-4 mb-6 border-y border-gray-100 dark:border-white/5">
+                    <div class="flex flex-col items-center w-1/3 border-r border-gray-100 dark:border-white/5">
+                        <span class="text-gray-400 text-xs font-bold tracking-wider uppercase">Ratings</span>
+                        <div class="flex items-center gap-1 mt-1">
+                            <span class="font-bold text-xl text-gray-800 dark:text-white" id="avgRatingDisplay">4.8</span>
+                            <i class="fas fa-star text-xs text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center w-1/3 border-r border-gray-100 dark:border-white/5">
+                        <span class="text-gray-400 text-xs font-bold tracking-wider uppercase">Downloads</span>
+                        <span class="font-bold text-xl text-gray-800 dark:text-white mt-1" id="dlCountDisplay">0</span>
+                    </div>
+                     <div class="flex flex-col items-center w-1/3">
+                        <span class="text-gray-400 text-xs font-bold tracking-wider uppercase">Age</span>
+                        <span class="font-bold text-xl text-gray-800 dark:text-white mt-1">4+</span>
+                    </div>
+                </div>
+
+                <div class="hidden mb-6 bg-gray-100 dark:bg-gray-800 rounded-xl p-4" id="downloadProgress">
+                    <div class="flex justify-between text-xs font-bold mb-2 text-blue-600"><span>Downloading...</span><span id="progressText">0%</span></div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden"><div class="bg-blue-600 h-2 rounded-full transition-all duration-300" id="progressBar" style="width: 0%"></div></div>
+                </div>
+
+                <h3 class="font-bold text-lg mb-3">Preview</h3>
+                <div class="flex gap-4 overflow-x-auto h-scroll mb-8 pb-4" id="screenshotContainer"></div>
+                
+                <h3 class="font-bold text-lg mb-2">Description</h3>
+                <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-line mb-8" id="detailDesc"></p>
+                
+                <div class="bg-gray-50 dark:bg-white/5 rounded-3xl p-5 mb-8">
+                    <h3 class="font-bold text-lg mb-4">Ratings & Reviews</h3>
+                    <div class="flex flex-col items-center mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+                        <p class="text-sm text-gray-500 mb-2">Tap to Rate:</p>
+                        <div class="flex gap-2 text-2xl text-gray-300" id="starInput">
+                            <i class="fas fa-star" onclick="window.setRating(1)"></i>
+                            <i class="fas fa-star" onclick="window.setRating(2)"></i>
+                            <i class="fas fa-star" onclick="window.setRating(3)"></i>
+                            <i class="fas fa-star" onclick="window.setRating(4)"></i>
+                            <i class="fas fa-star" onclick="window.setRating(5)"></i>
+                        </div>
+                    </div>
+                    <div class="space-y-4 mb-4" id="commentsList"></div>
+                    <div class="mt-4 flex gap-2">
+                        <input class="flex-1 bg-white dark:bg-slate-800 p-3 rounded-xl border-none text-sm outline-none shadow-sm" id="commentInput" placeholder="Write a review..." type="text"/>
+                        <button class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-md" onclick="window.submitComment()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULL SCREEN IMAGE VIEWER -->
+    <div class="hidden fixed inset-0 z-[70] bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm animate-zoom-in" id="fullScreenViewer" onclick="window.closeImageViewer()">
+        <button class="absolute top-6 right-6 text-white/80 hover:text-white text-4xl transition-colors"><i class="fas fa-times"></i></button>
+        <img class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl object-contain" id="fullScreenImage" src=""/>
+    </div>
+
+    <script>
+        // PWA SETUP
+        const siteLogo = "https://i.ibb.co/tPFKtb9p/Untitled-design-2.png";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Manifest Logic
+            const myManifest = {
+                "name": "Abir Apk",
+                "short_name": "AbirApk",
+                "start_url": window.location.href,
+                "display": "standalone",
+                "background_color": "#f0f2f5",
+                "theme_color": "#ffffff",
+                "icons": [{ "src": siteLogo, "sizes": "512x512", "type": "image/png" }]
+            };
+            const manifestBlob = new Blob([JSON.stringify(myManifest)], {type: 'application/json'});
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            const mLink = document.createElement('link');
+            mLink.href = manifestURL; mLink.rel = 'manifest';
+            document.head.appendChild(mLink);
+        });
+
+        // PWA INSTALL LOGIC
+        let deferredPrompt;
+        const installBtnUI = document.getElementById('pwaInstallBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if(installBtnUI) installBtnUI.classList.remove('hidden');
+        });
+
+        window.installPWA = function() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    installBtnUI.classList.add('hidden');
+                }
+                deferredPrompt = null;
+            });
+        };
+
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+          apiKey: "AIzaSyAfKj5JcjFZRIh-lOYCyTEeDjRRkUt1pOI",
+          authDomain: "abirapk-2d0f6.firebaseapp.com",
+          databaseURL: "https://abirapk-2d0f6-default-rtdb.firebaseio.com",
+          projectId: "abirapk-2d0f6",
+          storageBucket: "abirapk-2d0f6.firebasestorage.app",
+          messagingSenderId: "997145901838",
+          appId: "1:997145901838:web:b8b2ec5b9242517d2df55f"
+        };
+        
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+        const adLink = "https://www.effectivegatecpm.com/rdt49bzd2?key=f2290c0d390b38beff7b3bf9f2803853";
+
+        let appsData = [];
+        let currentApp = null;
+        let currentUser = null;
+        let userRating = 0;
+
+        // --- CORE FUNCTIONS ---
+        
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('button[id^="btn-"]').forEach(btn => btn.classList.remove('nav-active'));
+            
+            const target = document.getElementById('tab-' + tabName);
+            if(target) target.classList.add('active');
+            
+            const btn = document.getElementById('btn-' + tabName);
+            if(btn) btn.classList.add('nav-active');
+
+            if(tabName === 'upload') window.updateUploadUI();
+            window.scrollTo(0,0);
+        };
+
+        window.updateUploadUI = function() {
+            const gate = document.getElementById('authGate');
+            const form = document.getElementById('uploadFormSection');
+            if (currentUser) {
+                gate.classList.add('hidden');
+                form.classList.remove('hidden');
+                document.getElementById('userName').innerText = currentUser.displayName || currentUser.email;
+                document.getElementById('userAvatar').src = currentUser.photoURL || 'https://ui-avatars.com/api/?background=random&name='+currentUser.email;
+            } else {
+                gate.classList.remove('hidden');
+                form.classList.add('hidden');
+            }
+        };
+
+        window.toggleAuthMode = function(mode) {
+            const formLogin = document.getElementById('formLogin');
+            const formRegister = document.getElementById('formRegister');
+            const title = document.getElementById('authTitle');
+            
+            if(mode === 'register') {
+                formLogin.classList.add('hidden');
+                formRegister.classList.remove('hidden');
+                title.innerText = "Create Account";
+            } else {
+                formRegister.classList.add('hidden');
+                formLogin.classList.remove('hidden');
+                title.innerText = "Admin Access";
+            }
+        }
+
+        window.googleLogin = function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(e => alert("Login Error: " + e.message));
+        };
+
+        window.emailLogin = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            auth.signInWithEmailAndPassword(email, pass).catch(e => alert(e.message));
+        };
+
+        // DIRECT REGISTRATION FUNCTION (REPLACED OTP)
+        window.registerUser = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+            
+            if(pass.length < 6) { 
+                alert("Password must be at least 6 characters."); 
+                return; 
+            }
+
+            auth.createUserWithEmailAndPassword(email, pass)
+                .then(() => {
+                    alert("Account created successfully!");
+                    // Auth state change listener will handle the UI switch
+                })
+                .catch(err => {
+                    alert("Registration Failed: " + err.message);
+                });
+        };
+
+        window.logout = function() { auth.signOut(); };
+
+        window.submitApp = function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerText = "Uploading...";
+
+            const newApp = {
+                name: document.getElementById('upName').value,
+                developer: document.getElementById('upDev').value,
+                category: document.getElementById('upCat').value,
+                icon: document.getElementById('upIcon').value,
+                link: document.getElementById('upLink').value,
+                desc: document.getElementById('upDesc').value,
+                screenshots: document.getElementById('upScreens').value ? document.getElementById('upScreens').value.split(',') : [],
+                status: 'pending',
+                downloads: 0,
+                ratingSum: 0,
+                ratingCount: 0,
+                timestamp: Date.now()
+            };
+
+            db.ref('apps').push(newApp).then(() => {
+                alert("Success! App submitted for review.");
+                e.target.reset();
+                window.switchTab('home');
+            }).finally(() => { btn.disabled = false; btn.innerText = "Publish App"; });
+        };
+
+        window.openApp = function(id) {
+            const app = appsData.find(a => a.id === id);
+            if(!app) return;
+            currentApp = app;
+            userRating = 0;
+            updateStarsUI(0);
+            
+            const view = document.getElementById('appView');
+            view.classList.remove('hidden');
+            
+            // Populate basic info
+            document.getElementById('detailIcon').src = app.icon;
+            document.getElementById('detailName').innerText = app.name;
+            document.getElementById('detailDev').innerText = app.developer;
+            document.getElementById('detailDesc').innerText = app.desc;
+            
+            // Populate Stats
+            const dl = app.downloads || 0;
+            document.getElementById('dlCountDisplay').innerText = dl > 1000 ? (dl/1000).toFixed(1)+'K' : dl;
+            
+            const avg = app.ratingCount ? (app.ratingSum / app.ratingCount).toFixed(1) : "N/A";
+            document.getElementById('avgRatingDisplay').innerText = avg;
+
+            // Screenshots with ZOOM Feature
+            const sc = document.getElementById('screenshotContainer'); 
+            sc.innerHTML = '';
+            if(app.screenshots) {
+                app.screenshots.forEach(s => { 
+                    if(s && s.length > 5) {
+                        sc.innerHTML += `<img src="${s}" onclick="window.viewImage('${s}')" class="h-64 w-auto rounded-[18px] shadow-sm border border-gray-100 dark:border-gray-700 cursor-zoom-in hover:brightness-110 transition-all">`; 
+                    }
+                });
+            }
+
+            // Load Comments
+            loadComments(app.id);
+
+            // Reset UI
+            const btn = document.getElementById('installBtn');
+            btn.classList.remove('hidden'); btn.innerText = "GET";
+            document.getElementById('downloadProgress').classList.add('hidden');
+        };
+
+        // NEW: Image Viewer Logic
+        window.viewImage = function(src) {
+            const viewer = document.getElementById('fullScreenViewer');
+            const img = document.getElementById('fullScreenImage');
+            img.src = src;
+            viewer.classList.remove('hidden');
+        };
+
+        window.closeImageViewer = function() {
+            document.getElementById('fullScreenViewer').classList.add('hidden');
+        };
+
+        window.goHome = function() {
+            document.getElementById('appView').classList.add('hidden');
+        };
+
+        window.startDownload = function() {
+            // Ad click trigger
+            window.open(adLink, '_blank');
+            
+            const btn = document.getElementById('installBtn');
+            const prog = document.getElementById('downloadProgress');
+            const bar = document.getElementById('progressBar');
+            const txt = document.getElementById('progressText');
+            
+            btn.classList.add('hidden');
+            prog.classList.remove('hidden');
+            
+            let w = 0;
+            const int = setInterval(() => {
+                if(w >= 100) {
+                    clearInterval(int);
+                    saveToLibrary(currentApp);
+                    // Update Database Download Count
+                    db.ref('apps/'+currentApp.id+'/downloads').transaction(c => (c||0)+1);
+                    // Open actual link
+                    window.location.href = currentApp.link;
+                    setTimeout(() => {
+                        btn.innerText = "OPEN";
+                        btn.classList.remove('hidden');
+                        prog.classList.add('hidden');
+                    }, 1000);
+                } else {
+                    w += Math.random() * 5; // random speed
+                    if(w>100) w=100;
+                    bar.style.width = w+'%';
+                    txt.innerText = Math.floor(w)+'%';
+                }
+            }, 80);
+        };
+
+        // --- RATING & COMMENTS SYSTEM ---
+
+        window.setRating = function(r) {
+            userRating = r;
+            updateStarsUI(r);
+            if(!currentApp) return;
+            
+            // Save rating to DB (Update average)
+            db.ref('apps/'+currentApp.id).transaction(post => {
+                if (post) {
+                    if (!post.ratingCount) { post.ratingCount = 0; post.ratingSum = 0; }
+                    post.ratingCount++;
+                    post.ratingSum += r;
+                }
+                return post;
+            });
+            alert(`You rated ${r} stars!`);
+        };
+
+        function updateStarsUI(r) {
+            const stars = document.getElementById('starInput').children;
+            for(let i=0; i<5; i++) {
+                if(i < r) stars[i].classList.add('active', 'text-yellow-400');
+                else stars[i].classList.remove('active', 'text-yellow-400');
+            }
+        }
+
+        window.submitComment = function() {
+            const txt = document.getElementById('commentInput').value;
+            if(!txt.trim()) return;
+            if(!currentApp) return;
+            
+            const comment = {
+                user: currentUser ? (currentUser.displayName || "User") : "Anonymous",
+                text: txt,
+                time: Date.now()
+            };
+            
+            db.ref('apps/'+currentApp.id+'/comments').push(comment);
+            document.getElementById('commentInput').value = '';
+        };
+
+        function loadComments(appId) {
+            const list = document.getElementById('commentsList');
+            list.innerHTML = '<div class="text-center text-xs text-gray-400">Loading reviews...</div>';
+            
+            db.ref('apps/'+appId+'/comments').limitToLast(10).on('value', snap => {
+                list.innerHTML = '';
+                const data = snap.val();
+                if(data) {
+                    Object.values(data).reverse().forEach(c => {
+                        const date = new Date(c.time).toLocaleDateString();
+                        list.innerHTML += `
+                            <div class="bg-white dark:bg-slate-700 p-3 rounded-xl shadow-sm">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-bold text-xs">${c.user}</span>
+                                    <span class="text-[10px] text-gray-400">${date}</span>
+                                </div>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">${c.text}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    list.innerHTML = '<div class="text-center text-sm text-gray-400 py-2">No reviews yet. Be the first!</div>';
+                }
+            });
+        }
+
+        // --- LOCAL LIBRARY ---
+        function saveToLibrary(app) {
+            let lib = JSON.parse(localStorage.getItem('myApps')) || [];
+            if(!lib.find(a => a.id === app.id)) {
+                lib.push({id: app.id, name: app.name, icon: app.icon, date: new Date().toLocaleDateString()});
+                localStorage.setItem('myApps', JSON.stringify(lib));
+                renderDownloads();
+            }
+        }
+
+        function renderDownloads() {
+            const list = document.getElementById('downloadsList');
+            const lib = JSON.parse(localStorage.getItem('myApps')) || [];
+            list.innerHTML = lib.length ? '' : "<div class='text-center text-gray-400 mt-10 p-5 glass-panel rounded-xl'>Library Empty</div>";
+            
+            lib.reverse().forEach(a => {
+                list.innerHTML += `
+                    <div onclick="window.openApp('${a.id}')" class="glass-panel p-3 rounded-2xl flex items-center gap-4 cursor-pointer mb-3">
+                        <img src="${a.icon}" class="w-14 h-14 rounded-xl bg-gray-100 shadow-sm">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm dark:text-white">${a.name}</h4>
+                            <p class="text-xs text-green-600 font-medium">Installed</p>
+                        </div>
+                        <button class="bg-gray-100 dark:bg-slate-700 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs"><i class="fas fa-play"></i></button>
+                    </div>`;
+            });
+        }
+
+        window.toggleTheme = function() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        };
+
+        // --- INIT & FETCH DATA ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+            db.ref('apps').on('value', snap => {
+                appsData = [];
+                const data = snap.val();
+                const grid = document.getElementById('appGrid');
+                const trend = document.getElementById('trendingContainer');
+                
+                grid.innerHTML = ''; trend.innerHTML = '';
+                
+                if(data) {
+                    Object.keys(data).forEach(k => {
+                        const app = data[k]; app.id = k;
+                        if(app.status === 'approved' || !app.status) appsData.push(app);
+                    });
+                }
+                
+                // Shuffle for variety
+                appsData.sort(() => Math.random() - 0.5);
+
+                // Render Trending (Horizontal)
+                appsData.slice(0, 6).forEach(app => {
+                    trend.innerHTML += `
+                        <div onclick="window.openApp('${app.id}')" class="min-w-[85px] flex flex-col items-center gap-2 cursor-pointer snap-start group">
+                            <img src="${app.icon}" class="w-[85px] h-[85px] rounded-[22px] shadow-sm object-cover bg-white group-active:scale-95 transition-transform border border-white/40">
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs font-medium truncate w-[80px] text-center">${app.name}</span>
+                                <span class="text-[10px] text-gray-400">${app.category || 'App'}</span>
+                            </div>
+                        </div>`;
+                });
+
+                // Render Main Grid (Glass Cards)
+                appsData.forEach(app => {
+                    const stars = app.ratingCount ? (app.ratingSum/app.ratingCount).toFixed(1) : 'New';
+                    grid.innerHTML += `
+                        <div onclick="window.openApp('${app.id}')" class="glass-panel p-3.5 rounded-3xl flex items-center gap-4 cursor-pointer hover:bg-white/40 transition active:scale-[0.98]">
+                            <img src="${app.icon}" class="w-16 h-16 rounded-[18px] bg-gray-100 object-cover shadow-sm">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-base truncate dark:text-white leading-tight">${app.name}</h3>
+                                <p class="text-xs text-gray-500 truncate mb-1">${app.developer}</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold flex items-center gap-1"><i class="fas fa-star text-[8px]"></i> ${stars}</span>
+                                    <span class="text-[10px] text-gray-400 flex items-center gap-1"><i class="fas fa-arrow-down text-[8px]"></i> ${app.downloads||0}</span>
+                                </div>
+                            </div>
+                            <button class="bg-gray-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide">Get</button>
+                        </div>`;
+                });
+            });
+
+            // Banner Logic
+            db.ref('banners').on('value', snap => {
+                const c = document.getElementById('bannerContainer');
+                const d = snap.val();
+                if(d) {
+                    c.innerHTML = '';
+                    Object.keys(d).forEach(k => {
+                        const b = d[k];
+                        const act = b.appId ? "window.openApp('" + b.appId + "')" : "window.open('" + b.link + "','_blank')";
+                        
+                        c.innerHTML += `<div onclick="${act}" class="min-w-[90%] h-48 rounded-3xl overflow-hidden shadow-lg shadow-blue-500/10 relative cursor-pointer snap-center group">
+                            <img src="${b.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>`;
+                    });
+                }
+            });
+
+            auth.onAuthStateChanged(user => {
+                currentUser = user;
+                window.updateUploadUI();
+            });
+
+            renderDownloads();
+            
+            // Search Function
+            document.getElementById('searchInput').addEventListener('keyup', (e) => {
+                const val = e.target.value.toLowerCase();
+                const grid = document.getElementById('appGrid');
+                if(val.length > 0) {
+                    document.getElementById('trendingSection').classList.add('hidden');
+                    const filtered = appsData.filter(a => a.name.toLowerCase().includes(val));
+                    grid.innerHTML = '';
+                    filtered.forEach(app => {
+                         grid.innerHTML += `
+                        <div onclick="window.openApp('${app.id}')" class="glass-panel p-3 rounded-2xl flex items-center gap-3 cursor-pointer">
+                            <img src="${app.icon}" class="w-14 h-14 rounded-xl bg-gray-100 object-cover">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-sm dark:text-white">${app.name}</h3>
+                            </div>
+                        </div>`;
+                    });
+                } else {
+                    document.getElementById('trendingSection').classList.remove('hidden');
+                    db.ref('apps').once('value'); 
+                }
+            });
+        });
+    </script>
+</body>
+</html>
